@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2021 The Trax Authors.
+# Copyright 2024 The Trax Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -62,8 +62,7 @@ import functools
 import gc
 import os
 import time
-from jax import test_util  # pylint: disable=unused-import
-from jax.config import config
+from jax import config
 import numpy as np
 import psutil
 from tensorflow.compat.v2 import test

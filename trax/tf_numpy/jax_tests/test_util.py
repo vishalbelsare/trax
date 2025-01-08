@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2021 The Trax Authors.
+# Copyright 2024 The Trax Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -89,8 +89,8 @@ EPS = 1e-4
 python_scalar_dtypes = {
   bool: onp.dtype(onp.bool_),
   int: onp.dtype(onp.int_),
-  float: onp.dtype(onp.float_),
-  complex: onp.dtype(onp.complex_),
+  float: onp.dtype(onp.float64),
+  complex: onp.dtype(onp.complex128),
 }
 
 
@@ -260,46 +260,6 @@ def check_vjp(f, f_vjp, args, atol=None, rtol=None, eps=EPS):
   check_close(ip, ip_expected, atol=atol, rtol=rtol)
 
 
-@contextmanager
-def count_primitive_compiles():
-  xla.xla_primitive_callable.cache_clear()
-
-  # We count how many times we call primitive_computation (which is called
-  # inside xla_primitive_callable) instead of xla_primitive_callable so we don't
-  # count cache hits.
-  primitive_computation = xla.primitive_computation
-  count = [0]
-
-  def primitive_computation_and_count(*args, **kwargs):
-    count[0] += 1
-    return primitive_computation(*args, **kwargs)
-
-  xla.primitive_computation = primitive_computation_and_count
-  try:
-    yield count
-  finally:
-    xla.primitive_computation = primitive_computation
-
-
-@contextmanager
-def count_jit_and_pmap_compiles():
-  # No need to clear any caches since we generally jit and pmap fresh callables
-  # in tests.
-
-  jaxpr_subcomp = xla.jaxpr_subcomp
-  count = [0]
-
-  def jaxpr_subcomp_and_count(*args, **kwargs):
-    count[0] += 1
-    return jaxpr_subcomp(*args, **kwargs)
-
-  xla.jaxpr_subcomp = jaxpr_subcomp_and_count
-  try:
-    yield count
-  finally:
-    xla.jaxpr_subcomp = jaxpr_subcomp
-
-
 def device_under_test():
   return FLAGS.test_dut
 
@@ -373,8 +333,10 @@ def format_test_name_suffix(opname, shapes, dtypes):
 
 # We use special symbols, represented as singleton objects, to distinguish
 # between NumPy scalars, Python scalars, and 0-D arrays.
-class ScalarShape(object):
+class ScalarShape:
   def __len__(self): return 0
+  def __getitem__(self, i):
+    raise IndexError(f'index {i} out of range.')
 class _NumpyScalar(ScalarShape): pass
 class _PythonScalar(ScalarShape): pass
 NUMPY_SCALAR_SHAPE = _NumpyScalar()

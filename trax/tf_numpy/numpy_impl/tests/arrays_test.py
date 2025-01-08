@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2021 The Trax Authors.
+# Copyright 2024 The Trax Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
 # limitations under the License.
 
 """Tests for ndarray."""
-import collections
+from collections import abc
 
 import numpy as np
 import tensorflow.compat.v2 as tf
@@ -170,7 +170,7 @@ class ArrayTest(tf.test.TestCase):
 
   def testHash(self):
     a = t2a(tf.convert_to_tensor(value=10))
-    self.assertNotIsInstance(a, collections.Hashable)
+    self.assertNotIsInstance(a, abc.Hashable)
     with self.assertRaisesWithPredicateMatch(
         TypeError, r'unhashable type'):
       hash(a)

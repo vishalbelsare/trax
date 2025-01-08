@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2021 The Trax Authors.
+# Copyright 2024 The Trax Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,8 +21,7 @@ import os
 from absl.testing import absltest
 from absl.testing import parameterized
 import jax
-from jax import test_util  # pylint: disable=unused-import
-from jax.config import config
+from jax import config
 import tensorflow.compat.v2 as tf
 from trax import fastmath
 from trax import layers as tl

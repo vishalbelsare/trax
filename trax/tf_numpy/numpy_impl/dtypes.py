@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2021 The Trax Authors.
+# Copyright 2024 The Trax Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -31,13 +31,13 @@ from numpy import uint16
 from numpy import uint32
 from numpy import uint64
 from numpy import uint8
-from numpy import float_
 from numpy import float16
 from numpy import float32
 from numpy import float64
-from numpy import complex_
+float_ = float64
 from numpy import complex64
 from numpy import complex128
+complex_ = complex128
 
 from numpy import inexact
 

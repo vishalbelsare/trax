@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2021 The Trax Authors.
+# Copyright 2024 The Trax Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Core layer types and key functions used by various layers."""
 
 from absl import logging
@@ -809,8 +808,7 @@ def log_gaussian_pdf(x, mu, sigma):  # pylint: disable=invalid-name
   """
   a = mu.shape[-1] * jnp.log(2 * jnp.pi)
   _, b = jnp.linalg.slogdet(sigma)
-  y = jnp.linalg.solve(sigma, x - mu)
-  y = jnp.expand_dims(y, axis=-1)
+  y = jnp.linalg.solve(sigma, (x - mu)[..., None])
   xm = jnp.expand_dims(x - mu, axis=-2)
   c = jnp.matmul(xm, y)
   c = jnp.squeeze(jnp.squeeze(c, axis=-1), axis=-1)

@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2021 The Trax Authors.
+# Copyright 2024 The Trax Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -261,7 +261,7 @@ class ArrayCreationTest(tf.test.TestCase):
         self.all_arrays, self.all_types, ndmins, [True, False]):
       self.match(
           array_ops.array(a, dtype=dtype, ndmin=ndmin, copy=copy),
-          np.array(a, dtype=dtype, ndmin=ndmin, copy=copy))
+          np.array(a, dtype=dtype, ndmin=ndmin))
 
     zeros_list = array_ops.zeros(5)
 
@@ -558,7 +558,7 @@ class ArrayMethodsTest(tf.test.TestCase):
           self.match(
               array_ops.compress(arg1, arg2, *args, **kwargs),
               np.compress(
-                  np.asarray(arg1).astype(np.bool), arg2, *args, **kwargs))
+                  np.asarray(arg1).astype(bool), arg2, *args, **kwargs))
 
     run_test([True], 5)
     run_test([False], 5)
