@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2021 The Trax Authors.
+# Copyright 2024 The Trax Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """TensorFlow data sources and associated prepocessing functions."""
 
 import functools
@@ -29,7 +28,9 @@ import gin
 import jax
 import numpy as np
 import scipy
+import scipy.special
 import tensorflow as tf
+from tensorflow import estimator as tf_estimator
 import tensorflow_datasets as tfds
 import tensorflow_text as tf_text
 from trax import data
@@ -185,7 +186,7 @@ def _shuffle_data(dataset, target_names, training, shuffle_buffer_size,
     # Skip a random fraction at the beginning of the stream.  The skip is
     # essential for synchronous highly-parallel training to avoid multiple
     # replicas reading the same data in lock-step.
-    dataset = dataset.skip(random.randint(0, _MAX_SKIP_EXAMPLES))
+    dataset = dataset.skip(random.randint(0, int(_MAX_SKIP_EXAMPLES)))
   dataset = preprocess_fn(dataset, training)
   dataset = dataset.shuffle(shuffle_buffer_size)
   return dataset.prefetch(8)
@@ -380,13 +381,13 @@ def _train_and_eval_dataset_v1(problem_name, data_dir, train_shuffle_files,
       hparams = problem.get_hparams()
       bair_robot_pushing_hparams(hparams)
     train_dataset = problem.dataset(
-        tf.estimator.ModeKeys.TRAIN,
+        tf_estimator.ModeKeys.TRAIN,
         data_dir,
         shuffle_files=train_shuffle_files,
         hparams=hparams)
     train_dataset = train_dataset.map(_select_features)
     eval_dataset = problem.dataset(
-        tf.estimator.ModeKeys.EVAL,
+        tf_estimator.ModeKeys.EVAL,
         data_dir,
         shuffle_files=eval_shuffle_files,
         hparams=hparams)
@@ -1732,8 +1733,7 @@ def compute_single_result(op_name, num_args):
   elif op_name == 'circumface':
     return 2 * math.pi * num_args[0]
   elif op_name == 'choose':
-    # Older versions of scipy may require scipy.misc.comb.
-    return scipy.special.comb(num_args[0], num_args[1])  # pylint: disable=unreachable
+    return scipy.special.comb(num_args[0], num_args[1])
   elif op_name == 'cosine':
     return math.cos(num_args[0])
   elif op_name == 'cube_edge_by_volume':
@@ -1766,7 +1766,7 @@ def compute_single_result(op_name, num_args):
   elif op_name == 'gain_percent':
     return 100 + num_args[0]
   elif op_name == 'gcd':
-    return scipy.gcd(int(num_args[0]), int(num_args[1]))
+    return np.gcd(int(num_args[0]), int(num_args[1]))
   elif op_name == 'inverse':
     if num_args[0] != 0:
       return 1 / num_args[0]
@@ -1929,8 +1929,7 @@ def single_op_to_python_command(op_name, num_args):
   elif op_name == 'circumface':
     return '2 * math.pi * {}'.format(num_args[0])
   elif op_name == 'choose':
-    # Older versions of scipy may require scipy.misc.comb.
-    return 'scipy.special.comb({}, {})'.format(num_args[0], num_args[1])  # pylint: disable=unreachable
+    return 'scipy.special.comb({}, {})'.format(num_args[0], num_args[1])
   elif op_name == 'cosine':
     return 'math.cos({})'.format(num_args[0])
   elif op_name == 'cube_edge_by_volume':
@@ -1962,7 +1961,7 @@ def single_op_to_python_command(op_name, num_args):
   elif op_name == 'gain_percent':
     return '100 + {}'.format(num_args[0])
   elif op_name == 'gcd':
-    return 'scipy.gcd(int({}), int({}))'.format(num_args[0], num_args[1])
+    return 'np.gcd(int({}), int({}))'.format(num_args[0], num_args[1])
   elif op_name == 'inverse':
     # safe inverse
     if num_args[0] != 0:

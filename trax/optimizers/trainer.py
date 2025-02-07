@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2021 The Trax Authors.
+# Copyright 2024 The Trax Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Multi-device accelerated optimization."""
 
 from concurrent import futures
@@ -441,8 +440,7 @@ class ReversibleSerialTrainer:
 
   def _free_accelerators(self, exceptions=(), keep_constants=True):
     """Deletes all live buffers from accelerator with no safety guarantees."""
-    backend = jax.lib.xla_bridge.get_backend()
-    live_buffers = backend.live_buffers()
+    live_buffers = jax.live_arrays()
     logging.info('Deleting %d live buffers.', len(live_buffers))
     exceptions_buffers = []
     for x in fastmath.tree_flatten(exceptions):

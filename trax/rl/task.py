@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2021 The Trax Authors.
+# Copyright 2024 The Trax Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Classes for defining RL tasks in Trax."""
 
 import collections
@@ -271,6 +270,7 @@ def play(env, policy, dm_suite=False, max_steps=None, last_observation=None):
   cur_trajectory = Trajectory(last_observation)
   while not done and (max_steps is None or cur_step < max_steps):
     action, dist_inputs = policy(cur_trajectory)
+    action = np.asarray(action)
     step = env.step(action)
     if dm_suite:
       (observation, reward, done) = (

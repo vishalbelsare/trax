@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2021 The Trax Authors.
+# Copyright 2024 The Trax Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """BERT."""
 
 import os
@@ -309,9 +308,9 @@ class PretrainedBERT(tl.Serial):
     for a, b in zip(fastmath.tree_leaves(self.weights), new_w):
       assert a.shape == b.shape, (
           f'Expected shape {a.shape}, got shape {b.shape}')
-    self.weights = jax.tree_unflatten(jax.tree_structure(self.weights), new_w)
+    self.weights = jax.tree.unflatten(jax.tree.structure(self.weights), new_w)
     move_to_device = jax.jit(lambda x: x)
-    self.weights = jax.tree_map(move_to_device, self.weights)
+    self.weights = jax.tree.map(move_to_device, self.weights)
 
   def _settable_attrs(self):
     """We allow to set attributes required for loading the model from its checkpoints."""

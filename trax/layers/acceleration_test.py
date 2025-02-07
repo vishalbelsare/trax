@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2021 The Trax Authors.
+# Copyright 2024 The Trax Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,13 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Tests for acceleration."""
 
 from absl.testing import absltest
 
-from jax import test_util  # pylint: disable=unused-import
-from jax.config import config
+from jax import config
 import numpy as np
 
 from trax import fastmath

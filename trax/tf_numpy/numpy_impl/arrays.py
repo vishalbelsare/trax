@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2021 The Trax Authors.
+# Copyright 2024 The Trax Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -209,7 +209,7 @@ class ndarray(object):  # pylint: disable=invalid-name
       ValueError: If the array does not have size 1.
     """
     # TODO(wangpeng): Handle graph mode
-    return np.asscalar(self.data.numpy())
+    return self.data.numpy().item()
 
   def tolist(self):
     return self.data.numpy().tolist()

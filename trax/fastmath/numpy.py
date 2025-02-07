@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2021 The Trax Authors.
+# Copyright 2024 The Trax Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -236,8 +236,16 @@ def tree_unflatten(flat, tree, copy_from_tree=None):
     of tree but with leaves from flat, and the remaining elements of flat if
     more were provided than the number of leaves of tree (useful for recursion).
   """
-  if copy_from_tree is not None and tree in copy_from_tree:
-    return tree, flat
+  if copy_from_tree is not None:
+    for el in copy_from_tree:
+      # Equality checks comparing a DeviceArray with other Python objects
+      # may legitimately raise a TypeError.
+      try:
+        if tree == el:
+          return tree, flat
+      except TypeError:
+        continue
+
   if isinstance(tree, (list, tuple)):
     new_tree, rest = [], flat
     for t in tree:

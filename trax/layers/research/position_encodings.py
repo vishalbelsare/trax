@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2021 The Trax Authors.
+# Copyright 2024 The Trax Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,11 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Lint as: python3
 """Experimenting with position encodings."""
 
 import logging
 import jax
+import jax.extend as jex
 import numpy as np
 import trax
 from trax import fastmath
@@ -292,7 +292,7 @@ def threefry_2x32_prf(key, x: jnp.ndarray) -> jnp.ndarray:
     raise TypeError('x must be uint32[..., 2]', x)
   # Threefry-2x32 expects this weird format:
   x_3f = jnp.moveaxis(x, source=-1, destination=0).flatten()
-  y_3f = jax.random.threefry_2x32(key, x_3f)
+  y_3f = jex.random.threefry_2x32(key, x_3f)
   y = jnp.moveaxis(
       jnp.reshape(y_3f, (2,) + x.shape[:-1]), source=0, destination=-1)
   return y

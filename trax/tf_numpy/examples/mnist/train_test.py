@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2021 The Trax Authors.
+# Copyright 2024 The Trax Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -46,8 +46,8 @@ class TFNumpyMnistExampleTest(tf.test.TestCase):
 def fake_mnist_data():
 
   def gen_examples(num_examples):
-    x = np.array(
-        np.random.randn(num_examples, 784), copy=False, dtype=np.float32)
+    x = np.asarray(
+        np.random.randn(num_examples, 784), dtype=np.float32)
     y = np.zeros((num_examples, 10), dtype=np.float32)
     y[:][0] = 1.
     return (x, y)
